@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+    <head>
+        {% if title %}
+        <title>{{ title }} - Card Phan</title>
+        {% else %}
+        <title>Welcome to Card Phan!</title>
+        {% endif %}
+    </head>
+    <body>
+        <div>Card Phan: <a href='/index'>Home</a></div>
+        <hr>
+        {% block content %}{% endblock %}
+    </body>
+</html>
