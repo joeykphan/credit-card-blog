@@ -1,1 +1,2 @@
 FLASK_APP=ccblog.py
+FLASK_DEBUG=1
