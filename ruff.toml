@@ -13,3 +13,4 @@ exclude = [
 
 [per-file-ignores]
 "__init__.py" = ["E402","F401"]
+"routes.py" = ["ANN201"]
