@@ -1,0 +1,15 @@
+select = ["ALL"]
+
+ignore = [
+	"D211",
+	"D213"
+]
+
+exclude = [
+	".ruff_cache",
+	"venv",
+	"migrations"
+]
+
+[per-file-ignores]
+"__init__.py" = ["E402"]
