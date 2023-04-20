@@ -1,10 +1,12 @@
 from datetime import datetime
+
+import pytz
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.urls import url_parse
 
 from app import app, db
-from app.forms import LoginForm, RegistrationForm
+from app.forms import EditProfileForm, LoginForm, RegistrationForm
 from app.models import User
 
 
@@ -85,5 +87,21 @@ def user(username):
 @app.before_request
 def before_request():
     if current_user.is_authenticated:  # type: ignore
-        current_user.last_seen = datetime.utcnow()
+        current_user.last_seen = datetime.now(pytz.utc)
         db.session.commit()
+
+
+@app.route("/edit_profile", methods=["GET", "POST"])
+@login_required
+def edit_profile():
+    form = EditProfileForm()
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.about_me = form.about_me.data
+        db.session.commit()
+        flash("Your changes have been saved.")
+        return redirect(url_for("edit_profile"))
+    elif request.method == "GET":
+        form.username.data = current_user.username  # type: ignore
+        form.about_me.data = current_user.about_me  # type: ignore
+    return render_template("edit_profile.html", title="Edit Profile", form=form)
