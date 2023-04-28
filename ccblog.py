@@ -9,8 +9,8 @@ from app.models import Post, User
 def make_shell_context() -> dict[str, Any | None]:
     """Generate shell context for `flask shell`.
 
-    Returns
+    Returns:
     -------
-    Dictionary of object instances to inject into shell session.
+        dict: Object instances to inject into shell session.
     """
     return {"db": db, "User": User, "Post": Post}
