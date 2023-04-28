@@ -1,4 +1,4 @@
-""""Provides Form definitions for all forms."""
+""""Provide form definitions to interact with model data in the database."""
 from flask_wtf import FlaskForm
 from wtforms import BooleanField, PasswordField, StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
@@ -64,7 +64,7 @@ class RegistrationForm(FlaskForm):
 
         Raises:
         ------
-        ValidationError: The email is already in use
+            ValidationError: The email is already in use
         """
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
