@@ -3,7 +3,9 @@ select = ["ALL"]
 
 ignore = [
 	"D211",
-	"D213"
+	"D213",
+	"D406",
+	"PGH003"
 ]
 
 exclude = [
@@ -13,8 +15,9 @@ exclude = [
 ]
 
 [tool.ruff.per-file-ignores]
-"__init__.py" = ["E402","F401"]
-"routes.py" = ["ANN201"]
+"__init__.py" = ["E402", "F401"]
+"routes.py" = ["ANN201", "RET505"]
+"models.py" = ["A002", "A003", "S324"]
 
 [tool.djlint]
 extension = ["html"]
