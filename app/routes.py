@@ -1,3 +1,4 @@
+"""Provide controllers for all routes populated with model data."""
 from datetime import datetime
 
 import pytz
@@ -14,6 +15,12 @@ from app.models import User
 @app.route("/index")
 @login_required
 def index():
+    """Home page for blog.
+
+    Returns:
+    -------
+        str: HTML generated from index.html Jinja template filled with posts.
+    """
     posts = [
         {
             "author": {"username": "Joey"},
@@ -31,6 +38,12 @@ def index():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    """Login page for registered users.
+
+    Returns:
+    -------
+        str: HTML generated from login.html Jinja template filled with LoginForm.
+    """
     if current_user.is_authenticated:  # type: ignore
         return redirect(url_for("index"))
     form = LoginForm()
@@ -49,17 +62,36 @@ def login():
 
 @app.route("/logout")
 def logout():
+    """Log out a logged in user and redirect the user to the Home page.
+
+    Returns:
+    -------
+        str: HTML for Home page.
+    """
     logout_user()
     return redirect(url_for("index"))
 
 
 @app.route("/secret")
 def secret():
+    """Secret page.
+
+    Returns:
+    -------
+        str: HTML generated from secret Jinja Template.
+    """
     return render_template("index.html", title="Secret Page")
 
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    """Registration page for registering a new user.
+
+    Returns:
+    -------
+        str: HTML generated from register.html Jinja template filled with
+             RegistrationForm.
+    """
     if current_user.is_authenticated:  # type: ignore
         return redirect(url_for("index"))
     form = RegistrationForm()
@@ -75,7 +107,18 @@ def register():
 
 @app.route("/user/<username>")
 @login_required
-def user(username):
+def user(username: str):
+    """Profile page for registered users.
+
+    Keyword Arguments:
+    -----------------
+        username (str): username of user's profile page.
+
+    Returns:
+    -------
+        str: HTML generated from user.html Jinja template filled with a user's
+             username and posts.
+    """
     user = User.query.filter_by(username=username).first_or_404()
     posts = [
         {"author": user, "body": "test post 1"},
@@ -86,6 +129,7 @@ def user(username):
 
 @app.before_request
 def before_request():
+    """Log a logged in user's last seen time in UTC."""
     if current_user.is_authenticated:  # type: ignore
         current_user.last_seen = datetime.now(pytz.utc)
         db.session.commit()
@@ -94,6 +138,19 @@ def before_request():
 @app.route("/edit_profile", methods=["GET", "POST"])
 @login_required
 def edit_profile():
+    """Profile editing page for a logged in user to edit their user profile.
+
+        On valid form submit data is copied to user object and written to db.
+        When submit is invalid this is due to 2 reasons. One, the page is
+        requested for first time with GET request so the form is populated with
+        db data. Otherwise, there is a validation error from the data submitted
+        in the form and form is left unchanged.
+
+    Returns:
+    -------
+        str: HTML generated from edit_profile.html Jinja template filled with
+             EditProfileForm.
+    """
     form = EditProfileForm()
     if form.validate_on_submit():
         current_user.username = form.username.data
